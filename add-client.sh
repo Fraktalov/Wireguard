@@ -21,13 +21,13 @@ PRESHARED_KEY="_preshared.key"
 PRIV_KEY="_private.key"
 PUB_KEY="_public.key"
 
-read -p "Client requires routing (e.g. 192.168.1.0/24), [ENTER] set to default: No: " ROUTING
-if [ -z $ROUTING ]
-then ALLOWED_IP="0.0.0.0/0, ::/0"
-else ALLOWED_IP="0.0.0.0/0, ::/0, $ROUTING"
-fi
+#read -p "Client requires routing (e.g. 192.168.1.0/24), [ENTER] set to default: No: " ROUTING
+#if [ -z $ROUTING ]
+#then ALLOWED_IP="0.0.0.0/0, ::/0"
+#else ALLOWED_IP="0.0.0.0/0, ::/0, $ROUTING"
+#fi
 
-#ALLOWED_IP="0.0.0.0/0, ::/0"
+ALLOWED_IP="0.0.0.0/0, ::/0"
 
 # Go to the wireguard directory and create a directory structure in which we will store client configuration files
 mkdir -p ./clients
@@ -53,6 +53,13 @@ echo $OCTET_IP > /etc/wireguard/last_used_ip.var
 
 CLIENT_IP="$VPN_SUBNET$OCTET_IP/32"
 
+read -p "Client requires routing (e.g. 192.168.1.0/24), [ENTER] set to default: No: " CLIENT_ROUTING
+if [ -z $CLIENT_ROUTING ]
+then CLIENT_IP="$VPN_SUBNET$OCTET_IP/32"
+else CLIENT_IP="$VPN_SUBNET$OCTET_IP/32, $CLIENT_ROUTING"
+fi
+
+#v2
 # Create a blank configuration file client 
 cat > /etc/wireguard/clients/$USERNAME/$USERNAME.conf << EOF
 [Interface]
